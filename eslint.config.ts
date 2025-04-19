@@ -18,9 +18,14 @@ export default defineConfigWithVueTs(
 
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
-  
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
+  },
+  {
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    }
   },
 )

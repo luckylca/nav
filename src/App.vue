@@ -8,4 +8,6 @@ import { RouterView } from 'vue-router'
 </template>
 
 <style scoped>
+/* 全局样式重置 */
+
 </style>

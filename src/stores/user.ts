@@ -6,6 +6,7 @@ import {getreg} from '@/apis/user'
 export const useLoginStore = defineStore('login', () => {
   const account = ref()
   const password = ref()
+  const agreement = ref(false)
   async function login() {
     const response = await getLogin(account.value, password.value)
     console.log(response)
@@ -16,5 +17,5 @@ export const useLoginStore = defineStore('login', () => {
   }
 
 
-  return { account, password, login, register }
+  return { account, password, login, register, agreement }
 })

@@ -4,18 +4,17 @@ import {getLogin} from '@/apis/user'
 import {getreg} from '@/apis/user'
 
 export const useLoginStore = defineStore('login', () => {
-  const account = ref()
-  const password = ref()
-  const agreement = ref(false)
-  async function login() {
-    const response = await getLogin(account.value, password.value)
-    console.log(response)
+  const userinfo = ref({})
+  async function login(account:string, password:string) {
+    const response = await getLogin(account, password)
+    response.data = userinfo
   }
-  async function register() {
-    const response = await getreg(account.value, password.value)
+  async function register(account:string, password:string) {
+    const response = await getreg(account, password)
     console.log(response)
+    response.data = userinfo
   }
 
 
-  return { account, password, login, register, agreement }
+  return { login, register, userinfo }
 })

@@ -24,7 +24,7 @@
     </div>
     <div class="but-container">
       <div class="login-button" @click="loginclick">登录</div>
-      <div class="login-button" @click="resetForm">重置</div>
+      <div class="login-button" @click="registerclick">注册</div>
     </div>
   </div>
 </div>
@@ -33,8 +33,15 @@
 <script setup lang="ts">
 // import { getLogin } from '@/apis/user';
 import { ref } from 'vue';
-// import { useLoginStore } from '@/stores/user';
-// const loginStore = useLoginStore();
+import { useLoginStore } from '@/stores/user';
+import {getLogin} from '@/apis/user';
+import { getreg } from '@/apis/user';
+import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+
+const loginStore = useLoginStore();
+const router = useRouter();
 const formdata = ref({
   username: '',
   password: '',
@@ -55,14 +62,48 @@ const rules = {
   ],
 }
 const loginclick = ()=>{
+  loginStore.login(formdata.value.username, formdata.value.password)
+  form.value.validate(async (valid) => {
+    if (valid) {
+      const res = await getLogin(formdata.value.username, formdata.value.password)
+      console.log(res)
+      ElMessage({
+        type: 'success',
+        message: '登录成功',
+        duration: 2000
+      })
+      router.replace({path: '/'})
+    } else {
 
-
-
+      ElMessage({
+        type: 'error',
+        message: '登录失败，请检查用户名和密码',
+        duration: 2000
+      })
+    }
+  })
 }
-const resetForm = ()=>{
-  formdata.value.username = '';
-  formdata.value.password = '';
-  formdata.value.agreement = false;
+const registerclick = ()=>{
+  loginStore.register(formdata.value.username, formdata.value.password)
+  form.value.validate(async (valid) => {
+    if (valid) {
+      loginStore.register(formdata.value.username, formdata.value.password)
+      const res = await getreg(formdata.value.username, formdata.value.password)
+      console.log(res)
+      ElMessage({
+        type: 'success',
+        message: '注册成功',
+        duration: 2000
+      })
+      router.replace({path: '/'})
+    } else {
+      ElMessage({
+        type: 'error',
+        message: '注册失败',
+        duration: 2000
+      })
+    }
+  })
 }
 </script>
 
@@ -87,7 +128,7 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 0;
 }
 .agreementtext{
   padding: 0 10px; /* Corrected syntax for padding */
@@ -109,18 +150,14 @@ html, body {
   border: 2px solid transparent; /* 透明边框 */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 内嵌阴影 */
   backdrop-filter: blur(1px);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+
+/* 调整所有表单标签的字体大小 */
+:deep(.el-form-item__label) {
+  font-size: 14px; /* 设置标签字体大小 */
+  font-weight: 500; /* 可选：设置字体粗细 */
 }
 .form-container{
   position: relative;

@@ -4,7 +4,7 @@ import {getLogin} from '@/apis/user'
 import {getreg} from '@/apis/user'
 
 export const useLoginStore = defineStore('login', () => {
-  const userinfo = ref({})
+  const userinfo = ref([])
   async function login(account:string, password:string) {
     const response = await getLogin(account, password)
     response.data = userinfo

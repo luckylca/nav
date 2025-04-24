@@ -31,20 +31,20 @@ const altText = computed(() => props.text);
 <style lang="scss" scoped>
 .continer{
   display: flex;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   flex-direction: column;
   border: 1px solid red;
   margin-left: 10px;
   margin-right: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   width: 100%;
-  height: 125px;
+  height: 120px;
   border-radius: 20px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   padding-left: 20px;
   padding-right: 20px;
-  padding-top: 15px;
+  padding-top: 20px;
   box-sizing: border-box;
 }
 .webicon{
@@ -55,10 +55,10 @@ const altText = computed(() => props.text);
   align-items: center;
   border-radius: 50%;
   border: 1px solid #000;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .text{
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: 12px;
   color: #000;
   text-align: center;

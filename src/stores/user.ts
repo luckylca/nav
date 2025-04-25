@@ -195,12 +195,30 @@ export const useLoginStore = defineStore('user', () => {
     console.log(response)
     response.data = userinfo
   }
-  function userinfoupdata(index:number, name:string, dec:string, url:string, src:string) {
-    userinfo.value[index].name = name
-    userinfo.value[index].dec = dec
-    userinfo.value[index].url = url
-    userinfo.value[index].src = src
+function userinfoupdata(index: number, name: string, dec: string, url: string, src: string) {
+  const updatedUser = {
+    ...userinfo.value[index],
+    name,
+    dec,
+    url,
+    src
   }
+  userinfo.value = [
+    ...userinfo.value.slice(0, index),
+    updatedUser,
+    ...userinfo.value.slice(index + 1)
+  ]
+}
+function adduserinfo(name: string, dec: string, url: string, src: string) {
+  const newUser = {
+    name,
+    dec,
+    url,
+    src
+  }
+  userinfo.value.push(newUser)
+}
 
-  return { login, register, userinfo,userinfoupdata }
-})
+  return { login, register, userinfo, userinfoupdata, adduserinfo }
+
+}, { persist: true })

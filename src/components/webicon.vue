@@ -19,7 +19,8 @@ import { computed } from 'vue'
 const props = defineProps({
   src: String,
   text: String,
-  id:String
+  id:String,
+  mode:Number
 })
 
 const imageSrc = computed(() => props.src);

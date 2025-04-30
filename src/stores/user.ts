@@ -218,7 +218,10 @@ function adduserinfo(name: string, dec: string, url: string, src: string) {
   }
   userinfo.value.push(newUser)
 }
+function deleteUser(index: number) {
+  userinfo.value.splice(index, 1)
+}
 
-  return { login, register, userinfo, userinfoupdata, adduserinfo }
+return { login, register, userinfo, userinfoupdata, adduserinfo, deleteUser }
 
 }, { persist: true })

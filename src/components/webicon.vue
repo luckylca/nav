@@ -1,11 +1,12 @@
 <template>
-<div class="continer">
-   <div class="webicon">
+<div :class="{continer:true,'continer1':mode==1,'continer2':mode==3}" :key="id">
+  <div class="webicon">
     <img :src=imageSrc alt="Web Icon" />
   </div>
   <div class="text">
     {{altText}}
   </div>
+  <div class="edit"></div>
 </div>
 
 </template>
@@ -48,6 +49,41 @@ const altText = computed(() => props.text);
   padding-top: 20px;
   box-sizing: border-box;
 }
+.continer1{
+  border: 1px solid #000;
+  animation: edit 0.3s infinite;
+}
+.continer1::after{
+  content: '\00d7';
+  position: relative;
+  top: -95px; /* Adjust position if needed */
+  right: -30px; /* Adjust position if needed */
+  color: red; /* Set color for the content */
+  font-weight: bold; /* Make the content bold */
+  line-height: 1; /* Adjust line height if needed */
+  font-size: 24px; /* Increase font size for better visibility */
+  display: none;
+}
+.continer1:hover::after{
+  display: block;
+}
+.continer2{
+  border: 1px solid #000;
+  animation: edit 0.3s infinite;
+}
+.continer2::after{
+  content: '✍';
+  position: relative;
+  top: -95px; /* Adjust position if needed */
+  right: -30px; /* Adjust position if needed */
+  color: red; /* Set color for the content */
+  line-height: 1; /* Adjust line height if needed */
+  font-size: 20px; /* Increase font size for better visibility */
+  display: none;
+}
+.continer2:hover::after{
+  display: block;
+}
 .webicon{
   width: 30px;
   height: 30px;
@@ -73,5 +109,22 @@ const altText = computed(() => props.text);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
   cursor: pointer;
+}
+@keyframes edit {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(3deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 </style>

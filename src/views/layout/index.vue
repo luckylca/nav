@@ -26,9 +26,21 @@
       <ElButton type="primary" @click="submitForm">提交</ElButton>
     </template>
   </ElDialog>
+  <el-dialog
+    v-model="dialogVisible"
+    title="提示"
+    width="30%"
+  >
+    <span>是否删除这条网址</span>
+    <template #footer>
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="confirm">确定</el-button>
+    </template>
+  </el-dialog>
   <img src="../../assets/设置.svg" alt="" class="tabbarbutton" id="tabbarbutton" />
   <div class="tabbar" id="tabbar">
     <div><img src="../../assets/编辑.svg" alt="" class="settingimg1" @click="handleEditClick"></div>
+    <div><img src="../../assets/删除.svg" alt="" class="settingimg3" @click="handleDeleteClick"></div>
     <div><img src="../../assets/添加.svg" alt="" class="settingimg2" @click="handleAddClick"></div>
   </div>
 </div>
@@ -36,7 +48,7 @@
 <script setup lang="ts">
 import webicon from '@/components/webicon.vue'
 import {useLoginStore} from '@/stores/user'
-
+import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 let index = -1
 const mode = ref(0)
@@ -50,25 +62,67 @@ const tmmpform = ref({
   url:''
 })
 let temp1 = 0
+const dialogVisible = ref(false)
+const pretimmer = ref<number | undefined>(undefined)
+const confirm = () => {
+  loginStore.deleteUser(index)
+  dialogVisible.value = false
+}
+const handkeydown = (event: KeyboardEvent) => {
+  if(mode.value == 1 && event.key === 'Escape' && !pretimmer.value) {
+    // Start a timer when ESC is pressed
+    pretimmer.value = setTimeout(() => {
+      mode.value = 0
+      dialogVisible.value = false
+      pretimmer.value = undefined
+    }, 1000) // 1 second delay for long press
+  }
+}
+
+// Add keyup handler to cancel the timer if key is released too soon
+const handkeyup = (event: KeyboardEvent) => {
+  if(event.key === 'Escape' && pretimmer.value) {
+
+    clearTimeout(pretimmer.value)
+    pretimmer.value = undefined
+  }
+}
+
+// Don't forget to add this event listener in onMounted
+
 const handleClick = (i: number) => {
   if(mode.value==0){
     const url = userInfo.value[i].url;
     window.open(url, '_blank');
   }
   if(mode.value==1){
+    dialogVisible.value = true
+    index = i
+  }
+  if(mode.value==2){
     formDialog.value = true
     index = i
-    const selctedUser = userInfo.value[i]
     tmmpform.value = {
-      name: selctedUser.name,
-      dec: selctedUser.dec,
-      src: selctedUser.src,
-      url: selctedUser.url
+      name: userInfo.value[i].name,
+      dec: userInfo.value[i].dec,
+      src: userInfo.value[i].src,
+      url: userInfo.value[i].url
+    }
+  }
+  if(mode.value==3){
+    formDialog.value = true
+    index = i
+    tmmpform.value = {
+      name: userInfo.value[i].name,
+      dec: userInfo.value[i].dec,
+      src: userInfo.value[i].src,
+      url: userInfo.value[i].url
     }
   }
 }
-const handleEditClick = () => {
+const handleDeleteClick = () => {
   mode.value = 1
+  ElMessage('长按ESC键退出删除模式.')
 }
 
 const handleAddClick = () => {
@@ -81,6 +135,10 @@ const handleAddClick = () => {
     src: '',
     url: ''
   }
+}
+const handleEditClick = () => {
+  mode.value = 3
+  ElMessage('长按ESC键退出编辑模式.')
 }
 const showtabbar = () => {
   temp1 = 1
@@ -99,9 +157,8 @@ const submitForm = () => {
     mode.value = 0
     loginStore.adduserinfo(tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
   }
-
-  if (mode.value==1) {
-    loginStore.userinfoupdata(index, tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
+  if(mode.value==3){
+    loginStore.userinfoupdata(index,tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
   }
   formDialog.value = false
 }
@@ -112,6 +169,8 @@ onMounted(() => {
   tabbar.addEventListener('mouseleave', hidetabbar);
   target.addEventListener('mouseenter', showtabbar);
   target.addEventListener('mouseleave', hidetabbar);
+  window.addEventListener('keydown', handkeydown);
+  window.addEventListener('keyup', handkeyup);
 });
 </script>
 
@@ -157,7 +216,7 @@ onMounted(() => {
   border-radius: 40px;
   bottom: 120px;
   right: 120px;
-  height: 160px;
+  height: 200px;
   background-color: white;
   box-shadow:
     0 2px 4px rgba(0,0,0,0.08),
@@ -175,6 +234,10 @@ onMounted(() => {
 
 }
 .settingimg2{
+  width: 100%;
+  height: 40px;
+}
+.settingimg3{
   width: 100%;
   height: 40px;
 }

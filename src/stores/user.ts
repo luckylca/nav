@@ -4,6 +4,10 @@ import {getLogin} from '@/apis/user'
 import {getreg} from '@/apis/user'
 
 export const useLoginStore = defineStore('user', () => {
+  const userdata = ref({
+    account: 'lucky',
+    password: '',
+    token: '',})
   const userinfo = ref([
     {
       "name": "微博",
@@ -222,6 +226,6 @@ function deleteUser(index: number) {
   userinfo.value.splice(index, 1)
 }
 
-return { login, register, userinfo, userinfoupdata, adduserinfo, deleteUser }
+return { login, register, userinfo, userinfoupdata, adduserinfo, deleteUser,userdata }
 
 }, { persist: true })

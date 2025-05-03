@@ -36,7 +36,13 @@ const altText = computed(() => props.text);
   // justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 1px solid red;
+
+  border: solid transparent;
+  border-width: 2px;
+
+  /* 简约阴影系统 */
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15);
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 20px;

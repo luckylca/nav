@@ -16,3 +16,10 @@ export const getreg = async (account: string, password: string) => {
     }
   });
 }
+export const getwebinfo = async (url:string) => {
+  return instance.get('/getwebinfo', {
+    params: {
+      url
+    }
+  });
+}

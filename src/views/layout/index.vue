@@ -1,6 +1,10 @@
 <template>
 <div class="outer-container">
-  <div class="headline">lucky的导航栏</div>
+  <div class="headline">{{loginStore.userdata.account}}的导航栏</div>
+  <div class="user">
+    {{loginStore.userdata.account}}
+    <div @click="logout">退出登录</div>
+  </div>
   <div class="container">
     <div v-for="(item , i) in userInfo" :key="i">
       <webicon :src="item.src" :text="item.name" id="i" :mode="mode" @click="handleClick(i)" />
@@ -50,6 +54,7 @@ import webicon from '@/components/webicon.vue'
 import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
+import { getwebinfo } from '../../apis/user'
 let index = -1
 const mode = ref(0)
 const formDialog = ref(false)
@@ -68,8 +73,12 @@ const confirm = () => {
   loginStore.deleteUser(index)
   dialogVisible.value = false
 }
+const logout = () => {
+
+  window.location.href = '/login'
+}
 const handkeydown = (event: KeyboardEvent) => {
-  if(mode.value == 1 && event.key === 'Escape' && !pretimmer.value) {
+  if((mode.value == 1 || mode.value == 3) && event.key === 'Escape' && !pretimmer.value) {
     // Start a timer when ESC is pressed
     pretimmer.value = setTimeout(() => {
       mode.value = 0
@@ -98,16 +107,6 @@ const handleClick = (i: number) => {
   if(mode.value==1){
     dialogVisible.value = true
     index = i
-  }
-  if(mode.value==2){
-    formDialog.value = true
-    index = i
-    tmmpform.value = {
-      name: userInfo.value[i].name,
-      dec: userInfo.value[i].dec,
-      src: userInfo.value[i].src,
-      url: userInfo.value[i].url
-    }
   }
   if(mode.value==3){
     formDialog.value = true
@@ -150,11 +149,27 @@ const hidetabbar = () => {
     tabbar.style.opacity = '0';
     return
   }
-
 }
-const submitForm = () => {
+
+const submitForm = async () => {
   if(mode.value==2){
     mode.value = 0
+    if(tmmpform.value.url == " "){
+      ElMessage.error('请填写网址')
+    }
+    else
+    {
+      let tempform = await getwebinfo(tmmpform.value.url)
+      if(tmmpform.value.name == " "){
+        tmmpform.value.name = tempform.name
+      }
+      if(tmmpform.value.src == " "){
+        tmmpform.value.src = tempform.src
+      }
+      if(tmmpform.value.dec == " "){
+        tmmpform.value.dec = tempform.dec
+      }
+    }
     loginStore.adduserinfo(tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
   }
   if(mode.value==3){
@@ -186,6 +201,23 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
 }
+.user{
+  display: flex;
+  position:fixed;
+  top: 10px;
+  right: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  width: 120px;
+}
+.user:hover{
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
 .headline{
   margin-top: 20px;
   margin-bottom: 40px;

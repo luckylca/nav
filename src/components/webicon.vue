@@ -1,5 +1,9 @@
 <template>
-<div :class="{continer:true,'continer1':mode==1,'continer2':mode==3}" :key="id">
+<div>
+<div :class="{continer:true,'continer1':mode==1,'continer2':mode==3}" :key="id"
+    @mouseover="mymouseover"
+    @mouseout="mymouseout"
+    @mousemove="updata">
   <div class="webicon">
     <img :src=imageSrc alt="Web Icon" />
   </div>
@@ -8,12 +12,17 @@
   </div>
   <div class="edit"></div>
 </div>
-
+<div class="dec" v-if="decshow"
+      :style="tooltipStyle"
+      style="position: absolute; z-index: 999;">
+      {{ description }}
+</div>
+</div>
 </template>
 
 <script setup lang="ts">
 
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 import { computed } from 'vue'
 // import { ref } from 'vue'
 
@@ -21,12 +30,39 @@ const props = defineProps({
   src: String,
   text: String,
   id:String,
+  dec:String,
   mode:Number
 })
-
+const decshow = ref(false)
 const imageSrc = computed(() => props.src);
 const altText = computed(() => props.text);
+const description = computed(() => props.dec);
+const x = ref(0)
+const y = ref(0)
+const updata = (e: MouseEvent) => {
+  x.value = e.clientX;
+  y.value = e.clientY;
+}
+const tooltipStyle = computed(() => {
+  return {
+    top: `${y.value + 10}px`,
+    left: `${x.value + 10}px`
+  }
+})
+const mymouseover = () => {
+  if(props.mode!= 1 && props.mode != 3){
+    decshow.value = true;
+    return
+  }
 
+}
+
+const mymouseout = () => {
+  if(props.mode!= 1 && props.mode != 3){
+    decshow.value = false;
+    return
+  }
+}
 </script>
 
 
@@ -39,7 +75,7 @@ const altText = computed(() => props.text);
 
   border: solid transparent;
   border-width: 2px;
-
+  position: relative;
   /* 简约阴影系统 */
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15);
@@ -115,6 +151,11 @@ const altText = computed(() => props.text);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
   cursor: pointer;
+}
+.dec{
+  position: absolute;
+  font-size: 12px;
+  max-width: 150px;
 }
 @keyframes edit {
   0% {

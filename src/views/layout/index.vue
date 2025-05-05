@@ -7,7 +7,7 @@
   </div>
   <div class="container">
     <div v-for="(item , i) in userInfo" :key="i">
-      <webicon :src="item.src" :text="item.name" id="i" :mode="mode" @click="handleClick(i)" />
+      <webicon :src="item.src" :text="item.name" :dec="item.dec" id="i" :mode="mode" @click="handleClick(i)" />
     </div>
   </div>
   <ElDialog v-model="formDialog" title="表单示例" width="40%">
@@ -100,6 +100,7 @@ const handkeyup = (event: KeyboardEvent) => {
 // Don't forget to add this event listener in onMounted
 
 const handleClick = (i: number) => {
+  console.log(mode.value)
   if(mode.value==0){
     const url = userInfo.value[i].url;
     window.open(url, '_blank');

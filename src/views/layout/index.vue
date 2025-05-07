@@ -1,6 +1,8 @@
 <template>
 <div class="outer-container">
   <div class="headline">{{loginStore.userdata.account}}的导航栏</div>
+  <div class="time">10:20</div>
+  <websearch/>
   <div class="user">
     {{loginStore.userdata.account}}
     <div @click="logout">退出登录</div>
@@ -51,6 +53,7 @@
 </template>
 <script setup lang="ts">
 import webicon from '@/components/webicon.vue'
+import websearch from '@/components/websearch.vue'
 import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
@@ -195,12 +198,18 @@ onMounted(() => {
 :global(html), :global(body) {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
 }
 .outer-container{
   height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
+}
+.time{
+  text-align:center;
+
 }
 .user{
   display: flex;
@@ -282,7 +291,7 @@ onMounted(() => {
   gap: 20px; // 统一控制间距
   max-width: 1200px; // 限制最大宽度
   margin: 0 auto; // 水平居中
-  // border: 1px solid red;
+  border: 1px solid red;
 
 }
 

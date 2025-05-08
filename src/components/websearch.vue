@@ -1,6 +1,8 @@
 <template>
-<div class="continer">
-  <img :src="SearchEngineList[index].icon" alt="" class="Search_engine"  @click="changeengine"/>
+<div class="container">
+  <div class="chose1" :class="{ active: showArrows }">&lt;</div>
+  <img :src="SearchEngineList[index].icon" alt="" class="Search_engine" @mouseenter="showArrows = true" @mouseleave="showArrows = false" @click="changeengine"/>
+  <div class="chose2" :class="{ active: showArrows }">&gt;</div>
   <input type="text" placeholder="请输入内容" class="input-data"/>
   <img src="../assets/搜索.svg" alt="" class="searchbutton" />
 </div>
@@ -8,60 +10,47 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import search360 from '../assets/webicon/360搜索.png'
-import baidu from '../assets/webicon/百度.png'
-import bing from '../assets/webicon/必应.png'
-import google from '../assets/webicon/谷歌.png'
-import zhihu from '../assets/webicon/知乎.png'
-import bilbil from '../assets/webicon/icon_bilibili.png'
 
+const showArrows = ref(false);
 const index = ref(2)
 const SearchEngineList = ref([
   {
     name: 'bing',
-    icon: bing,
+    icon: 'https://cn.bing.com/favicon.ico',
     id: 1
   },
   {
     name: 'google',
-    icon: google,
+    icon: 'https://www.google.com/favicon.ico',
     id: 2
   },
   {
     name: 'baidu',
-    icon: baidu,
+    icon: 'https://www.baidu.com/favicon.ico',
     id: 3
   },
   {
-    name: 'zhihu',
-    icon: zhihu,
-    id: 4
-  },
-  {
     name: 'bilbil',
-    icon: bilbil,
-    id: 5
-  },
-  {
-    name: '360搜索',
-    icon: search360,
-    id: 6
+    icon: 'https://www.bilibili.com/favicon.ico',
+    id: 4
   },
 ]);
 
 const changeengine = () => {
+
+
+
   console.log('change search engine');
 }
 
 
-
 </script>
 
-<style>
-.continer{
+<style lang="scss" scoped>
+.container{
   width: 60vw;
   border: 1px solid red;
-  height: 100px;
+  height: 50px;
   margin: 20px auto;
   display: flex;
   align-items: center;
@@ -71,13 +60,40 @@ const changeengine = () => {
   position: relative;
 }
 .Search_engine{
-  max-width: 30px;
-  max-height: 30px;
+  max-width: 25px;
+  max-height: 25px;
   border-radius: 50%;
-  margin-left: 10px;
+  margin-left: 13px;
   position: absolute;
   left: 0;
-  top: 4px;
+  top: 11px;
+}
+.chose1{
+  width: 10px;
+  height: 30px;
+  position: absolute;
+  left: 5px;
+  top: 16px;
+  font-size: 10px;
+  opacity: 0;
+}
+.chose2{
+  width: 10px;
+  height: 30px;
+  border-radius: 50%;
+  position: absolute;
+  left: 38px;
+  top: 16px;
+  font-size: 10px;
+  opacity: 0;
+}
+.chose1, .chose2 {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chose1.active, .chose2.active {
+  opacity: 1;
 }
 .searchbutton{
   width: 20px;

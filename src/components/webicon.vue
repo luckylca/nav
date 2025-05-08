@@ -14,7 +14,7 @@
 </div>
 <div class="dec" v-if="decshow"
       :style="tooltipStyle"
-      style="position: absolute; z-index: 999;">
+      style="position: fixed; z-index: 999;">
       {{ description }}
 </div>
 </div>

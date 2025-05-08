@@ -1,15 +1,15 @@
 <template>
 <div class="outer-container">
-  <div class="headline">{{loginStore.userdata.account}}的导航栏</div>
-  <div class="time">10:20</div>
-  <websearch/>
-  <div class="user">
-    {{loginStore.userdata.account}}
-    <div @click="logout">退出登录</div>
+  <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 1000">
+    <topnav/>
   </div>
-  <div class="container">
-    <div v-for="(item , i) in userInfo" :key="i">
-      <webicon :src="item.src" :text="item.name" :dec="item.dec" id="i" :mode="mode" @click="handleClick(i)" />
+  <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 999" class="container">
+    <div class="time">{{ formattedTime }}</div>
+    <websearch/>
+    <div class="container_item">
+      <div v-for="(item , i) in userInfo" :key="i">
+        <webicon :src="item.src" :text="item.name" :dec="item.dec" id="i" :mode="mode" @click="handleClick(i)" />
+      </div>
     </div>
   </div>
   <ElDialog v-model="formDialog" title="表单示例" width="40%">
@@ -58,6 +58,7 @@ import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 import { getwebinfo } from '../../apis/user'
+import topnav from './components/topnav/index.vue'
 let index = -1
 const mode = ref(0)
 const formDialog = ref(false)
@@ -72,13 +73,26 @@ const tmmpform = ref({
 let temp1 = 0
 const dialogVisible = ref(false)
 const pretimmer = ref<number | undefined>(undefined)
+
+const currentTime = ref<Date>(new Date())
+
+// 格式化时间（HH:mm:ss）
+const formattedTime = ref<string>('')
+
+// 格式化函数
+const formatTime = (date: Date): string => {
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${hours}:${minutes}:${seconds}`
+}
+
+// 定时器引用
+let intervalId: number | null = null
+
 const confirm = () => {
   loginStore.deleteUser(index)
   dialogVisible.value = false
-}
-const logout = () => {
-
-  window.location.href = '/login'
 }
 const handkeydown = (event: KeyboardEvent) => {
   if((mode.value == 1 || mode.value == 3) && event.key === 'Escape' && !pretimmer.value) {
@@ -158,22 +172,22 @@ const hidetabbar = () => {
 const submitForm = async () => {
   if(mode.value==2){
     mode.value = 0
-    if(tmmpform.value.url == " "){
-      ElMessage.error('请填写网址')
-    }
-    else
-    {
-      let tempform = await getwebinfo(tmmpform.value.url)
-      if(tmmpform.value.name == " "){
-        tmmpform.value.name = tempform.name
-      }
-      if(tmmpform.value.src == " "){
-        tmmpform.value.src = tempform.src
-      }
-      if(tmmpform.value.dec == " "){
-        tmmpform.value.dec = tempform.dec
-      }
-    }
+    // if(tmmpform.value.url == " "){
+    //   ElMessage.error('请填写网址')
+    // }
+    // else
+    // {
+    //   let tempform = await getwebinfo(tmmpform.value.url)
+    //   if(tmmpform.value.name == " "){
+    //     tmmpform.value.name = tempform.name
+    //   }
+    //   if(tmmpform.value.src == " "){
+    //     tmmpform.value.src = tempform.src
+    //   }
+    //   if(tmmpform.value.dec == " "){
+    //     tmmpform.value.dec = tempform.dec
+    //   }
+    // }
     loginStore.adduserinfo(tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
   }
   if(mode.value==3){
@@ -190,6 +204,15 @@ onMounted(() => {
   target.addEventListener('mouseleave', hidetabbar);
   window.addEventListener('keydown', handkeydown);
   window.addEventListener('keyup', handkeyup);
+    // 初始化时间
+  formattedTime.value = formatTime(currentTime.value)
+
+  // 每秒更新时间
+  intervalId = window.setInterval(() => {
+    currentTime.value = new Date()
+    formattedTime.value = formatTime(currentTime.value)
+  }, 1000)
+
 });
 </script>
 
@@ -209,34 +232,12 @@ onMounted(() => {
 }
 .time{
   text-align:center;
-
-}
-.user{
-  display: flex;
-  position:fixed;
-  top: 10px;
-  right: 10px;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  width: 120px;
-}
-.user:hover{
-  border-radius: 8px;
-  border: 1px solid #e5e5e5;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-}
-
-.headline{
-  margin-top: 20px;
-  margin-bottom: 40px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
   font-size: 50px;
   font-weight: bold;
+  margin-bottom: 100px;
+  margin-top: 80px;
 }
+
 .tabbarbutton{
   position: fixed;
   bottom: 125px;
@@ -247,7 +248,7 @@ onMounted(() => {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   border-radius: 50%;
   transition: transform 0.5s ease;
-  z-index: 3;
+  z-index: 1000;
 }
 .tabbarbutton:hover{
   transform: rotate(180deg);
@@ -265,7 +266,7 @@ onMounted(() => {
     0 4px 8px rgba(0,0,0,0.06),
     0 8px 16px rgba(0,0,0,0.04),
     0 16px 24px rgba(0,0,0,0.03);
-  z-index: 2;
+  z-index: 999;
   opacity: 0;
   transition: opacity 0.5s ease;
 }
@@ -273,24 +274,34 @@ onMounted(() => {
   width: 100%;
   height: 40px;
   margin-top: 10px;
+  z-index: 1000;
 
 }
 .settingimg2{
   width: 100%;
   height: 40px;
+  z-index: 1000;
 }
 .settingimg3{
   width: 100%;
   height: 40px;
+  z-index: 1000;
 }
-.container {
+.container{
   box-sizing: border-box;
-  padding: 0 40px; // 距离视口左右20p
+  margin-top: 100px;
+}
+.container_item {
+  box-sizing: border-box;
+  padding-left: 40px; // 距离视口左右20p
+  padding-right: 40px; // 距离视口左右20px
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); // 调整最小列宽
   gap: 20px; // 统一控制间距
   max-width: 1200px; // 限制最大宽度
-  margin: 0 auto; // 水平居中
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 400px;
   border: 1px solid red;
 
 }

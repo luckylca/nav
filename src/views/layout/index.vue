@@ -234,8 +234,8 @@ onMounted(() => {
   text-align:center;
   font-size: 50px;
   font-weight: bold;
-  margin-bottom: 100px;
-  margin-top: 80px;
+  margin-bottom: 40px;
+  margin-top: 10px;
 }
 
 .tabbarbutton{
@@ -298,10 +298,10 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); // 调整最小列宽
   gap: 20px; // 统一控制间距
-  max-width: 1200px; // 限制最大宽度
+  max-width: 1300px; // 限制最大宽度
   margin-left: auto;
   margin-right: auto;
-  margin-top: 400px;
+  margin-top: 100px;
   border: 1px solid red;
 
 }

@@ -1,10 +1,10 @@
 <template>
 <div class="container">
   <div class="chose1" :class="{ active: showArrows }">&lt;</div>
-  <img :src="SearchEngineList[index].icon" alt="" class="Search_engine" @mouseenter="showArrows = true" @mouseleave="showArrows = false" @click="changeengine"/>
+  <img :src="SearchEngineList[index].icon" alt="" class="Search_engine" v-on:wheel="handleWheel" @mouseenter="changeSearchEngine" @mouseleave="reset"/>
   <div class="chose2" :class="{ active: showArrows }">&gt;</div>
   <input type="text" placeholder="请输入内容" class="input-data"/>
-  <img src="../assets/搜索.svg" alt="" class="searchbutton" />
+  <img src="../assets/搜索.svg" alt="" class="search_button" />
 </div>
 </template>
 
@@ -12,7 +12,7 @@
 import { ref } from 'vue';
 
 const showArrows = ref(false);
-const index = ref(2)
+const index = ref(2);
 const SearchEngineList = ref([
   {
     name: 'bing',
@@ -36,17 +36,38 @@ const SearchEngineList = ref([
   },
 ]);
 
-const changeengine = () => {
+const handleWheel = (event: { deltaY: number; }) => {
+  if(showArrows.value == true)
+{
+  if (event.deltaY < 0) {
+    index.value--;
+    if (index.value < 0) {
+      index.value = SearchEngineList.value.length;
+    }
 
+  } else if (event.deltaY > 0) {
+    index.value++;
+    if (index.value >= SearchEngineList.value.length) {
+      index.value = 0;
+    }
 
-
-  console.log('change search engine');
+  }
 }
 
+}
+const changeSearchEngine = () => {
+  showArrows.value = true;
+  document.body.style.overflow = 'hidden'
+}
+const reset = () => {
+  showArrows.value = false;
+  document.body.style.overflow = ''
+}
 
 </script>
 
 <style lang="scss" scoped>
+
 .container{
   width: 60vw;
   border: 1px solid red;
@@ -95,7 +116,7 @@ const changeengine = () => {
 .chose1.active, .chose2.active {
   opacity: 1;
 }
-.searchbutton{
+.search_button{
   width: 20px;
   height: 50px;
   border-radius: 50%;
@@ -104,6 +125,10 @@ const changeengine = () => {
   position: absolute;
   right: 0;
   top: 0;
+}
+.search_button:hover{
+  transform: scale(1.2);
+  transition: all 0.3s ease;
 }
 .input-data{
   border-radius: 20px;

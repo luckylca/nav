@@ -24,7 +24,6 @@
 
 import { defineProps, ref } from 'vue'
 import { computed } from 'vue'
-// import { ref } from 'vue'
 
 const props = defineProps({
   src: String,
@@ -76,7 +75,6 @@ const mymouseout = () => {
   border: solid transparent;
   border-width: 2px;
   position: relative;
-  /* 简约阴影系统 */
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15);
   margin-left: 10px;

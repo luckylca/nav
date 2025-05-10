@@ -57,7 +57,7 @@ import websearch from '@/components/websearch.vue'
 import realtime from '../layout/components/time/index.vue'
 import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
-import { onMounted, ref, watch,nextTick } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 // import { getwebinfo } from '../../apis/user'
 import topnav from './components/topnav/index.vue'
 import Sortable from 'sortablejs';
@@ -99,7 +99,7 @@ const handkeyup = (event: KeyboardEvent) => {
 const handleClick = (i: number) => {
   console.log(mode.value)
   if(mode.value==0){
-    const url = userInfo.value[i].url;
+    let url = userInfo.value[i].url;
     window.open(url, '_blank');
   }
   if(mode.value==1){

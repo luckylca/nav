@@ -3,38 +3,67 @@
   <div class="chose1" :class="{ active: showArrows }">&lt;</div>
   <img :src="SearchEngineList[index].icon" alt="" class="Search_engine" v-on:wheel="handleWheel" @mouseenter="changeSearchEngine" @mouseleave="reset"/>
   <div class="chose2" :class="{ active: showArrows }">&gt;</div>
-  <input type="text" placeholder="请输入内容" class="input-data"/>
-  <img src="../assets/搜索.svg" alt="" class="search_button" />
+  <input type="text" placeholder="请输入内容" class="input-data" v-model="inputText" @keyup.enter="search"/>
+  <img src="../assets/搜索.svg" alt="" class="search_button" @click="search"/>
 </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-
+import { ElMessage } from 'element-plus';
 const showArrows = ref(false);
-const index = ref(2);
+const index = ref(0);
 const SearchEngineList = ref([
   {
-    name: 'bing',
+    name: 'cn.bing',
     icon: 'https://cn.bing.com/favicon.ico',
-    id: 1
+    id: 0
   },
   {
     name: 'google',
     icon: 'https://www.google.com/favicon.ico',
-    id: 2
+    id: 1
   },
   {
     name: 'baidu',
     icon: 'https://www.baidu.com/favicon.ico',
-    id: 3
+    id: 2
   },
   {
-    name: 'bilbil',
+    name: 'bilibili',
     icon: 'https://www.bilibili.com/favicon.ico',
-    id: 4
+    id: 3
   },
 ]);
+const inputText = ref('');
+const search = () => {
+
+  if(inputText.value == '')
+  {
+    ElMessage('请输入内容')
+    return
+  }
+  if(index.value== 0)
+    {
+      const url = `https://cn.bing.com/search?q=${inputText.value}`;
+      window.open(url, '_blank');
+    }
+  else if(index.value == 1)
+    {
+      const url = `https://www.google.com/search?q=${inputText.value}`;
+      window.open(url, '_blank');
+    }
+  else if(index.value == 2)
+    {
+      const url = `https://www.baidu.com/s?wd=${inputText.value}`;
+      window.open(url, '_blank');
+    }
+  else if(index.value == 3)
+    {
+      const url = `https://www.bilibili.com/search?keyword=${inputText.value}`;
+      window.open(url, '_blank');
+    }
+}
 
 const handleWheel = (event: { deltaY: number; }) => {
   if(showArrows.value == true)

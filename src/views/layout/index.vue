@@ -4,7 +4,7 @@
     <topnav/>
   </div>
   <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 999" class="container">
-    <div class="time">{{ formattedTime }}</div>
+    <realtime/>
     <websearch/>
     <div class="container_item">
       <div v-for="(item , i) in userInfo" :key="i">
@@ -13,18 +13,18 @@
     </div>
   </div>
   <ElDialog v-model="formDialog" title="表单示例" width="40%">
-    <ElForm :model="tmmpform" label-width="80px">
+    <ElForm :model="tempForm" label-width="80px">
       <ElFormItem label="名称">
-        <ElInput v-model="tmmpform.name" />
+        <ElInput v-model="tempForm.name" />
       </ElFormItem>
       <ElFormItem label="描述">
-        <ElInput v-model="tmmpform.dec" />
+        <ElInput v-model="tempForm.dec" />
       </ElFormItem>
       <ElFormItem label="图标">
-        <ElInput v-model="tmmpform.src" />
+        <ElInput v-model="tempForm.src" />
       </ElFormItem>
       <ElFormItem label="链接">
-        <ElInput v-model="tmmpform.url" />
+        <ElInput v-model="tempForm.url" />
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -43,28 +43,30 @@
       <el-button type="primary" @click="confirm">确定</el-button>
     </template>
   </el-dialog>
-  <img src="../../assets/设置.svg" alt="" class="tabbarbutton" id="tabbarbutton" />
+  <img src="../../assets/设置.svg" alt="" class="tabbarButton" id="tabbarButton" />
   <div class="tabbar" id="tabbar">
-    <div><img src="../../assets/编辑.svg" alt="" class="settingimg1" @click="handleEditClick"></div>
-    <div><img src="../../assets/删除.svg" alt="" class="settingimg3" @click="handleDeleteClick"></div>
-    <div><img src="../../assets/添加.svg" alt="" class="settingimg2" @click="handleAddClick"></div>
+    <div><img src="../../assets/编辑.svg" alt="" class="settingImg1" @click="handleEditClick"></div>
+    <div><img src="../../assets/删除.svg" alt="" class="settingImg3" @click="handleDeleteClick"></div>
+    <div><img src="../../assets/添加.svg" alt="" class="settingImg2" @click="handleAddClick"></div>
   </div>
 </div>
 </template>
 <script setup lang="ts">
 import webicon from '@/components/webicon.vue'
 import websearch from '@/components/websearch.vue'
+import realtime from '../layout/components/time/index.vue'
 import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import { getwebinfo } from '../../apis/user'
+// import { getwebinfo } from '../../apis/user'
 import topnav from './components/topnav/index.vue'
+
 let index = -1
 const mode = ref(0)
 const formDialog = ref(false)
 const loginStore = useLoginStore()
 const userInfo = ref(loginStore.userinfo)
-const tmmpform = ref({
+const tempForm = ref({
   name: '',
   dec: '',
   src: '',
@@ -73,23 +75,6 @@ const tmmpform = ref({
 let temp1 = 0
 const dialogVisible = ref(false)
 const pretimmer = ref<number | undefined>(undefined)
-
-const currentTime = ref<Date>(new Date())
-
-// 格式化时间（HH:mm:ss）
-const formattedTime = ref<string>('')
-
-// 格式化函数
-const formatTime = (date: Date): string => {
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  const seconds = String(date.getSeconds()).padStart(2, '0')
-  return `${hours}:${minutes}:${seconds}`
-}
-
-// 定时器引用
-let intervalId: number | null = null
-
 const confirm = () => {
   loginStore.deleteUser(index)
   dialogVisible.value = false
@@ -104,8 +89,6 @@ const handkeydown = (event: KeyboardEvent) => {
     }, 1000) // 1 second delay for long press
   }
 }
-
-// Add keyup handler to cancel the timer if key is released too soon
 const handkeyup = (event: KeyboardEvent) => {
   if(event.key === 'Escape' && pretimmer.value) {
 
@@ -113,9 +96,6 @@ const handkeyup = (event: KeyboardEvent) => {
     pretimmer.value = undefined
   }
 }
-
-// Don't forget to add this event listener in onMounted
-
 const handleClick = (i: number) => {
   console.log(mode.value)
   if(mode.value==0){
@@ -129,7 +109,7 @@ const handleClick = (i: number) => {
   if(mode.value==3){
     formDialog.value = true
     index = i
-    tmmpform.value = {
+    tempForm.value = {
       name: userInfo.value[i].name,
       dec: userInfo.value[i].dec,
       src: userInfo.value[i].src,
@@ -146,7 +126,7 @@ const handleAddClick = () => {
   mode.value = 2
   formDialog.value = true
   index = -1
-  tmmpform.value = {
+  tempForm.value = {
     name: '',
     dec: '',
     src: '',
@@ -168,35 +148,40 @@ const hidetabbar = () => {
     return
   }
 }
-
 const submitForm = async () => {
   if(mode.value==2){
     mode.value = 0
-    // if(tmmpform.value.url == " "){
+    // if(tempform.value.url == " "){
     //   ElMessage.error('请填写网址')
     // }
     // else
     // {
-    //   let tempform = await getwebinfo(tmmpform.value.url)
-    //   if(tmmpform.value.name == " "){
-    //     tmmpform.value.name = tempform.name
+    //   let tempform = await getwebinfo(tempForm.value.url)
+    //   if(tempForm.value.name == " "){
+    //     tempForm.value.name = tempform.name
     //   }
-    //   if(tmmpform.value.src == " "){
-    //     tmmpform.value.src = tempform.src
+    //   if(tempForm.value.src == " "){
+    //     tempForm.value.src = tempform.src
     //   }
-    //   if(tmmpform.value.dec == " "){
-    //     tmmpform.value.dec = tempform.dec
+    //   if(tempForm.value.dec == " "){
+    //     tempForm.value.dec = tempform.dec
     //   }
     // }
-    loginStore.adduserinfo(tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
+    loginStore.adduserinfo(tempForm.value.name, tempForm.value.dec, tempForm.value.url, tempForm.value.src)
   }
   if(mode.value==3){
-    loginStore.userinfoupdata(index,tmmpform.value.name, tmmpform.value.dec, tmmpform.value.url, tmmpform.value.src)
+    loginStore.userinfoupdata(index,tempForm.value.name, tempForm.value.dec, tempForm.value.url, tempForm.value.src)
   }
   formDialog.value = false
 }
+
+
+
+
+
+
 onMounted(() => {
-  const target = document.getElementById('tabbarbutton');
+  const target = document.getElementById('tabbarButton');
   const tabbar = document.getElementById('tabbar');
   tabbar.addEventListener('mouseenter', showtabbar);
   tabbar.addEventListener('mouseleave', hidetabbar);
@@ -204,14 +189,6 @@ onMounted(() => {
   target.addEventListener('mouseleave', hidetabbar);
   window.addEventListener('keydown', handkeydown);
   window.addEventListener('keyup', handkeyup);
-    // 初始化时间
-  formattedTime.value = formatTime(currentTime.value)
-
-  // 每秒更新时间
-  intervalId = window.setInterval(() => {
-    currentTime.value = new Date()
-    formattedTime.value = formatTime(currentTime.value)
-  }, 1000)
 
 });
 </script>
@@ -230,15 +207,8 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
 }
-.time{
-  text-align:center;
-  font-size: 50px;
-  font-weight: bold;
-  margin-bottom: 40px;
-  margin-top: 10px;
-}
 
-.tabbarbutton{
+.tabbarButton{
   position: fixed;
   bottom: 125px;
   right: 125px;
@@ -250,7 +220,7 @@ onMounted(() => {
   transition: transform 0.5s ease;
   z-index: 1000;
 }
-.tabbarbutton:hover{
+.tabbarButton:hover{
   transform: rotate(180deg);
 }
 .tabbar{
@@ -270,19 +240,19 @@ onMounted(() => {
   opacity: 0;
   transition: opacity 0.5s ease;
 }
-.settingimg1{
+.settingImg1{
   width: 100%;
   height: 40px;
   margin-top: 10px;
   z-index: 1000;
 
 }
-.settingimg2{
+.settingImg2{
   width: 100%;
   height: 40px;
   z-index: 1000;
 }
-.settingimg3{
+.settingImg3{
   width: 100%;
   height: 40px;
   z-index: 1000;

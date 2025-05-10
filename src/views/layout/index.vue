@@ -6,9 +6,9 @@
   <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 999" class="container">
     <realtime/>
     <websearch/>
-    <div class="container_item">
-      <div v-for="(item , i) in userInfo" :key="i">
-        <webicon :src="item.src" :text="item.name" :dec="item.dec" id="i" :mode="mode" @click="handleClick(i)" />
+    <div class="container_item" ref="containerRef" >
+      <div v-for="item in userInfo" :key="item.id" class="webicon">
+        <webicon :src="item.src" :text="item.name" :dec="item.dec" :id="item.id" :mode="mode" @click="handleClick(item.id)"/>
       </div>
     </div>
   </div>
@@ -57,10 +57,10 @@ import websearch from '@/components/websearch.vue'
 import realtime from '../layout/components/time/index.vue'
 import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch,nextTick } from 'vue'
 // import { getwebinfo } from '../../apis/user'
 import topnav from './components/topnav/index.vue'
-
+import Sortable from 'sortablejs';
 let index = -1
 const mode = ref(0)
 const formDialog = ref(false)
@@ -174,12 +174,28 @@ const submitForm = async () => {
   }
   formDialog.value = false
 }
-
-
-
-
-
-
+const containerRef = ref<HTMLElement | null>(null)
+const sortableInstance = ref<Sortable | null>(null)
+function initSortable() {
+  const container = containerRef.value
+  if (!container) return
+  // 销毁已有实例避免重复初始化
+  if (sortableInstance.value) {
+    sortableInstance.value.destroy()
+  }
+  sortableInstance.value = new Sortable(container, {
+    animation: 150,
+    ghostClass: 'sortable-ghost',
+    onEnd: async (evt) => {
+      if (evt.oldIndex !== undefined && evt.newIndex !== undefined) {
+        await loginStore.changeWebOrder(evt.oldIndex, evt.newIndex)
+        nextTick(() => {
+          initSortable()
+        })
+      }
+    }
+  })
+}
 onMounted(() => {
   const target = document.getElementById('tabbarButton');
   const tabbar = document.getElementById('tabbar');
@@ -189,7 +205,7 @@ onMounted(() => {
   target.addEventListener('mouseleave', hidetabbar);
   window.addEventListener('keydown', handkeydown);
   window.addEventListener('keyup', handkeyup);
-
+  initSortable();
 });
 </script>
 

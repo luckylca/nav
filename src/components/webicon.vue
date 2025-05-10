@@ -5,7 +5,7 @@
     @mouseout="mymouseout"
     @mousemove="updata">
   <div class="webicon">
-    <img :src=imageSrc alt="Web Icon" />
+    <img :src=imageSrc alt="Web Icon" class="icon"/>
   </div>
   <div class="text">
     {{altText}}
@@ -29,7 +29,7 @@ import { computed } from 'vue'
 const props = defineProps({
   src: String,
   text: String,
-  id:String,
+  id: Number,
   dec:String,
   mode:Number
 })
@@ -136,6 +136,9 @@ const mymouseout = () => {
   border: 1px solid #000;
   margin-top: 10px;
 }
+.icon{
+  user-select: none;
+}
 .text{
   margin-top: 20px;
   font-size: 12px;
@@ -145,6 +148,7 @@ const mymouseout = () => {
   overflow: hidden;    /* 隐藏溢出内容 */
   text-overflow: ellipsis; /* 显示省略号 */
   width: 100%;
+  user-select: none;
 }
 .continer:hover{
   background-color: #f0f0f0;
@@ -156,6 +160,7 @@ const mymouseout = () => {
   position: absolute;
   font-size: 12px;
   max-width: 150px;
+  user-select: none;
 }
 @keyframes edit {
   0% {

@@ -99,8 +99,11 @@ const handkeyup = (event: KeyboardEvent) => {
 const handleClick = (i: number) => {
   console.log(mode.value)
   if(mode.value==0){
-    let url = userInfo.value[i].url;
-    window.open(url, '_blank');
+    const url = userInfo.value[i].url;
+    setTimeout(() => {
+      window.open(url, '_blank');
+    }, 400);
+    
   }
   if(mode.value==1){
     dialogVisible.value = true

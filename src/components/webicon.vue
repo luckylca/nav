@@ -3,7 +3,8 @@
 <div :class="{continer:true,'continer1':mode==1,'continer2':mode==3}" :key="id"
     @mouseover="mymouseover"
     @mouseout="mymouseout"
-    @mousemove="updata">
+    @mousemove="updata"
+    v-wave>
   <div class="webicon">
     <img :src=imageSrc alt="Web Icon" class="icon"/>
   </div>

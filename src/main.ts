@@ -2,7 +2,7 @@ import './assets/main.css'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
+import VWave from 'v-wave'
 import App from './App.vue'
 import router from './router'
 
@@ -11,5 +11,4 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)
-
-app.mount('#app')
+app.use(VWave).mount('#app')

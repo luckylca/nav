@@ -1,27 +1,62 @@
 <template>
 <div class="continer">
-  <img src="https://github.com/favicon.ico" alt="" />
+  <img src="../../../../assets/music/音乐.png" alt="" class="music" @mouseenter="showMusicCard"/>
   <img src="https://github.com/favicon.ico" alt="" class="github" >
-  <div class="headline">{{loginStore.userdata.account}}的导航栏</div>
+  <div class="headline animate__animated"
+    onmouseover="this.classList.add('animate__flip')"
+    onmouseout="this.classList.remove('animate__flip')"
+  >{{loginStore.userdata.account}}的导航栏</div>
   <div class="user">
     {{loginStore.userdata.account}}
   </div>
   <div @click="logout">退出登录</div>
 </div>
+<div class="musicClass" id="musicClass">
+  <musicCard />
+</div>
 </template>
 <script lang="ts" setup>
 import {useLoginStore} from '@/stores/user'
-
+import musicCard from '@/components/musicCard.vue'
+import { onMounted,ref } from 'vue'
 const loginStore = useLoginStore()
-
-
-
-
-
-
+const hideTimeout = ref<number | undefined>(undefined)
+const showMusicCard = () => {
+  clearTimeout(hideTimeout.value);
+  const musicClass = document.getElementById('musicClass');
+  if (musicClass) {
+    musicClass.style.opacity = '1'
+    musicClass.style.transition = 'opacity 0.5s'
+  }
+}
+const hideMusicCard = () => {
+  clearTimeout(hideTimeout.value);
+  hideTimeout.value = setTimeout(() => {
+    const musicClass = document.getElementById('musicClass')
+    if (musicClass) {
+      musicClass.style.opacity = '0'
+      musicClass.style.transition = 'opacity 0.5s'
+    }
+  }, 5000)
+}
 const logout = () => {
   window.location.href = '/login'
 }
+
+onMounted(() => {
+  const musicClass = document.getElementById('musicClass')
+  const inputElement = musicClass.querySelector('input, textarea, [contenteditable]');
+  musicClass.addEventListener('mouseenter', showMusicCard);
+  musicClass.addEventListener('mouseleave', hideMusicCard);
+  if (inputElement) {
+    inputElement.addEventListener('focus', () => {
+      showMusicCard();
+    });
+    inputElement.addEventListener('blur', () => {
+      hideMusicCard();
+    });
+  }
+})
 </script>
 <style lang="scss" scoped>
 .continer{
@@ -33,14 +68,18 @@ const logout = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
+  padding: 0 0px;
+  margin-top: 0px;
   background-color: gray;
 }
 .github{
   margin-left: 5px;
-
-
 }
+.music{
+  width: 30px;
+  height: 30px;
+}
+
 .user{
   padding: 0 5px;
 }
@@ -51,5 +90,14 @@ const logout = () => {
   font-size: 20px;
   font-weight: bold;
 }
+.musicClass{
+  position: relative;
+  width: 200px;
+  height: 100%;
+  top: 50px;
+  left: 0px;
+  opacity: 0;
+}
+
 
 </style>

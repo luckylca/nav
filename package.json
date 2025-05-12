@@ -13,8 +13,10 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
+    "animate.css": "^4.1.1",
     "axios": "^1.8.4",
     "element-plus": "^2.9.8",
+    "hover.css": "^2.3.2",
     "pinia": "^3.0.1",
     "pinia-plugin-persistedstate": "^4.2.0",
     "sortablejs": "^1.15.6",

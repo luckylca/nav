@@ -1,6 +1,6 @@
 <template>
 <div class="outer-container">
-  <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 1000">
+  <div style="width: 100%; position: fixed; top: 0; left: 0; z-index: 1000">
     <topnav/>
   </div>
   <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 999" class="container">
@@ -103,7 +103,7 @@ const handleClick = (i: number) => {
     setTimeout(() => {
       window.open(url, '_blank');
     }, 400);
-    
+
   }
   if(mode.value==1){
     dialogVisible.value = true

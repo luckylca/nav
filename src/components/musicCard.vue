@@ -4,28 +4,22 @@
     <input type="text" placeholder="Search for music..." class="searchInput" v-model="inputText"/>
     <img src="../assets/搜索.svg" alt="" class="search_button" @click="search"/>
   </div>
-
   <!-- <div class="musicName">Song Title</div> -->
   <div class="musicCard">
     <div class="preDiv">
-      <img src="../assets/music/上一个.png" alt="" class="preMusic"/>
+      <img src="../assets/music/上一个.png" alt="" class="preMusic" @click="preMusic" />
     </div>
-    <!-- <div class="playPauseDiv">
-      <img src="../assets/music/播放.png" alt="" class="playMusic" v-show="!isPlaying" @click="playMusic"/>
-      <img src="../assets/music/暂停.png" alt="" class="pauseMusic" v-show="isPlaying" @click="pauseMusic"/>
-    </div> -->
-
     <div class="playPauseDiv">
       <div class="musicName" v-show="isPlaying" @click="pauseMusic" v-on:wheel="handleWheel">{{ realAudioInfo.song }}</div>
       <img src="../assets/music/播放.png" alt="" class="pauseMusic" v-show="!isPlaying" @click="playMusic"/>
     </div>
     <div class="nextDiv">
-      <img src="../assets/music/下一个.png" alt="" class="nextMusic"/>
+      <img src="../assets/music/下一个.png" alt="" class="nextMusic" @click="nextMusic"/>
     </div>
   </div>
   <div class="musicList" v-show="isList">
-    <div v-for="item in musicList" :key="item.id" class="musicItem">
-      <div class="musicInfo" @click="musicStart(item.id)">
+    <div v-for="(item,i) in musicList" :key="item.id" class="musicItem">
+      <div class="musicInfo" @click="musicStart(item.id,i)">
         <div class="song">{{ item.song }}</div>
         <div class="artist">{{ item.singer }}</div>
       </div>
@@ -33,15 +27,17 @@
   </div>
   <audio
     ref="audioRef"
+    class="audio"
     :src="audioSrc"
     @canplay="onCanPlay"
+    loop
   ></audio>
 </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import {getMusicListApi,getMusicApi} from '../apis/music';
-const audioSrc = ref('')
+const audioSrc = ref('http://m701.music.126.net/20250512232809/a607947a63a21ea70416ee68786e85c5/jdyyaac/obj/w5rDlsOJwrLDjj7CmsOj/21437209997/c67b/affc/9c70/f128f990576f52957c574c2f9f0db2f5.m4a?vuutv=aSJyNjIY7+2utrgh8x6enxpvTm7PyFPuVZX1S4qvD4wPVnedZQWA/gixjfliYtSy7mJxSMsumt9R25mJMyOuGkqLaPhxLUQ90I83yitFco0=')
 const inputText = ref('')
 interface MusicItem {
   id: number;
@@ -60,6 +56,8 @@ const musicList = ref<MusicItem[]>([])
 const isList = ref(false)
 const isPlaying = ref(false)
 const volumeLevel = ref(50)
+const musicIndex = ref(0)
+const imgurl = ref("https://p3.music.126.net/mQcab-6L7D-w1lRxmYB7MQ==/109951168015051713.jpg")
 const playMusic = () => {
   if (audioRef.value) {
     isPlaying.value = true;
@@ -90,6 +88,27 @@ const onCanPlay = () => {
     console.error('播放失败:', err);
   });
 };
+const preMusic = () => {
+  if (audioRef.value) {
+    if (musicIndex.value > 0) {
+      musicIndex.value--;
+    } else {
+      musicIndex.value = musicList.value.length - 1;
+    }
+    musicStart(musicList.value[musicIndex.value].id, musicIndex.value);
+  }
+}
+const nextMusic = () => {
+  if (audioRef.value) {
+    if (musicIndex.value < musicList.value.length - 1) {
+      musicIndex.value++;
+    } else {
+      musicIndex.value = 0;
+    }
+    musicStart(musicList.value[musicIndex.value].id, musicIndex.value);
+  }
+}
+
 async function getMusicList(word: string) {
   return await getMusicListApi(word)
 
@@ -104,7 +123,7 @@ function search(){
       console.log(musicList.value);
   })
 }
-function musicStart(id: number){
+function musicStart(id: number, index: number) {
   getMusic(id).then((res) => {
     console.log(res.data.data);
     const url = res.data.data.url;
@@ -114,17 +133,35 @@ function musicStart(id: number){
       singer: res.data.data.singer,
       cover: res.data.data.cover
     }
+    imgurl.value = res.data.data.cover;
+    musicIndex.value = index;
     audioSrc.value = url;
     if (audioRef.value) {
       audioRef.value.volume = volumeLevel.value / 100;
     }
-
+    document.documentElement.style.setProperty('--imgurl', `url(${imgurl.value})`);
     isPlaying.value = true;
     audioRef.value?.play();
   })
 }
 </script>
 <style scoped lang="scss">
+.music-card-container {
+
+}
+
+.music-card-content {
+  /* 这是实际显示音乐控件的部分 */
+  pointer-events: auto;
+}
+
+/* 这是扩展区域，但不应该捕获鼠标事件 */
+.music-card-expanded-area {
+  pointer-events: none;
+}
+:root{
+  --imgurl: url("https://p3.music.126.net/mQcab-6L7D-w1lRxmYB7MQ==/109951168015051713.jpg");
+}
 .container{
   width: 200px;
   border: 1px solid #000;
@@ -134,6 +171,8 @@ function musicStart(id: number){
   align-items: center;
   justify-content: center;
   border-radius: 10px;
+  z-index: -1;
+  pointer-events: auto;
 }
 .search{
   width: 200px;
@@ -159,13 +198,14 @@ function musicStart(id: number){
 }
 .musicName{
   width: 100px;
+  height: 30px;
   font-size: 15px;
   font-weight: bold;
   text-align: center;
   user-select: none;
   overflow:hidden;
   text-overflow: ellipsis;
-  padding: 10px 2px;
+  padding: 0 2px;
   box-sizing: border-box;
 }
 .musicName:hover{
@@ -182,6 +222,19 @@ function musicStart(id: number){
   justify-content: center;
   margin: 10px auto;
   border-radius: 10px;
+}
+.musicCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--imgurl);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5; /* 调整透明度 */
+  z-index: -1;
 }
 .preDiv{
   width: 40px;
@@ -265,10 +318,12 @@ function musicStart(id: number){
 .preMusic{
   width: 25px;
   height: 100%;
+  user-select: none;
 }
 .nextMusic{
   width: 25px;
   height: 100%;
+  user-select: none;
 }
 .playMusic{
   width: 100%;

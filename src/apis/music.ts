@@ -10,7 +10,8 @@ export const getMusicListApi = async (word:string) => {
 export const getMusicApi = async (id:number) => {
   return musicRequest.get('/v2/music/netease', {
     params: {
-      id: id
+      id: id,
+      quality: 1
     }
   });
 };

@@ -71,6 +71,7 @@ onMounted(() => {
   padding: 0 0px;
   margin-top: 0px;
   background-color: gray;
+  position: relative;
 }
 .github{
   margin-left: 5px;
@@ -91,13 +92,11 @@ onMounted(() => {
   font-weight: bold;
 }
 .musicClass{
-  position: relative;
+  position: absolute;
   width: 200px;
   height: 100%;
-  top: 50px;
+  top: 100%;
   left: 0px;
   opacity: 0;
 }
-
-
 </style>

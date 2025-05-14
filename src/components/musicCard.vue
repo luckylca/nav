@@ -146,19 +146,6 @@ function musicStart(id: number, index: number) {
 }
 </script>
 <style scoped lang="scss">
-.music-card-container {
-
-}
-
-.music-card-content {
-  /* 这是实际显示音乐控件的部分 */
-  pointer-events: auto;
-}
-
-/* 这是扩展区域，但不应该捕获鼠标事件 */
-.music-card-expanded-area {
-  pointer-events: none;
-}
 :root{
   --imgurl: url("https://p3.music.126.net/mQcab-6L7D-w1lRxmYB7MQ==/109951168015051713.jpg");
 }
@@ -173,6 +160,7 @@ function musicStart(id: number, index: number) {
   border-radius: 10px;
   z-index: -1;
   pointer-events: auto;
+  background-color: rgba(224, 224, 224, 0.5);
 }
 .search{
   width: 200px;
@@ -222,6 +210,7 @@ function musicStart(id: number, index: number) {
   justify-content: center;
   margin: 10px auto;
   border-radius: 10px;
+
 }
 .musicCard::before {
   content: "";

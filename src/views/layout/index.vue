@@ -4,7 +4,10 @@
     <topnav/>
   </div>
   <div style="width: 100%; position: absolute; top: 0; left: 0; z-index: 999" class="container">
-    <realtime/>
+    <div style="display: flex;justify-content: center;">
+      <realtime/>
+    </div>
+
     <websearch/>
     <div class="container_item" ref="containerRef" >
       <div v-for="item in userInfo" :key="item.id" class="webicon">
@@ -226,14 +229,26 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
 }
+.outer-container::after{
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://bing.img.run/rand_uhd.php');
+  background-size: cover;
+  opacity: 0.9;
+  background-position: center;
+  z-index: -1;
 
+}
 .tabbarButton{
   position: fixed;
   bottom: 125px;
   right: 125px;
   height: 50px;
   width: 50px;
-  background-color: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   border-radius: 50%;
   transition: transform 0.5s ease;
@@ -249,7 +264,7 @@ onMounted(() => {
   bottom: 120px;
   right: 120px;
   height: 200px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow:
     0 2px 4px rgba(0,0,0,0.08),
     0 4px 8px rgba(0,0,0,0.06),
@@ -291,11 +306,10 @@ onMounted(() => {
   margin-left: auto;
   margin-right: auto;
   margin-top: 100px;
-  border: 1px solid red;
-
+  // border: 1px solid red;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.1);
 }
-
-
 
 
 </style>

@@ -13,11 +13,20 @@
   </div>
   <div class="edit"></div>
 </div>
-<div class="dec" v-if="decshow"
+<!-- <div class="dec" v-if="decshow"
       :style="tooltipStyle"
       style="position: fixed; z-index: 999;">
       {{ description }}
-</div>
+</div> -->
+<teleport to="body">
+  <div
+    class="dec"
+    v-if="decshow"
+    :style="tooltipStyle"
+  >
+    {{ description }}
+  </div>
+</teleport>
 </div>
 </template>
 
@@ -141,7 +150,7 @@ const mymouseout = () => {
 .text{
   margin-top: 20px;
   font-size: 12px;
-  color: #000;
+  color: white;
   text-align: center;
   // white-space: nowrap; /* 禁止换行 */
   overflow: hidden;    /* 隐藏溢出内容 */
@@ -150,16 +159,17 @@ const mymouseout = () => {
   user-select: none;
 }
 .continer:hover{
-  background-color: #f0f0f0;
+  background-color: rgba(164, 164, 170, 1);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
   cursor: pointer;
 }
 .dec{
-  position: absolute;
+  position: fixed;
   font-size: 12px;
   max-width: 150px;
   user-select: none;
+  z-index: 1000;
 }
 @keyframes edit {
   0% {

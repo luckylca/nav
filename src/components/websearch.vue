@@ -99,7 +99,6 @@ const reset = () => {
 
 .container{
   width: 60vw;
-  border: 1px solid red;
   height: 50px;
   margin: 20px auto;
   display: flex;

@@ -1,5 +1,5 @@
 <template>
-<div class="time">{{ formattedTime }}</div>
+<div class="time hvr-grow">{{ formattedTime }}</div>
 </template>
 
 <script setup lang="ts">
@@ -35,11 +35,18 @@ onMounted(() => {
 <style scoped lang="scss">
 
 .time{
+  width: 250px;;
   text-align:center;
   font-size: 50px;
   font-weight: bold;
   margin-bottom: 40px;
   margin-top: 10px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  mix-blend-mode: difference;
+  backdrop-filter: blur(10px);
+  border-radius: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 

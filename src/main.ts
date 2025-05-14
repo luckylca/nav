@@ -6,6 +6,7 @@ import VWave from 'v-wave'
 import App from './App.vue'
 import router from './router'
 import 'animate.css';
+import 'hover.css';
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

@@ -14,9 +14,13 @@
         <webicon :src="item.src" :text="item.name" :dec="item.dec" :id="item.id" :mode="mode" @click="handleClick(item.id)"/>
       </div>
     </div>
+
   </div>
   <ElDialog v-model="formDialog" title="表单示例" width="40%">
     <ElForm :model="tempForm" label-width="80px">
+      <ElFormItem label="链接">
+        <ElInput v-model="tempForm.url" />
+      </ElFormItem>
       <ElFormItem label="名称">
         <ElInput v-model="tempForm.name" />
       </ElFormItem>
@@ -25,9 +29,6 @@
       </ElFormItem>
       <ElFormItem label="图标">
         <ElInput v-model="tempForm.src" />
-      </ElFormItem>
-      <ElFormItem label="链接">
-        <ElInput v-model="tempForm.url" />
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -61,7 +62,7 @@ import realtime from '../layout/components/time/index.vue'
 import {useLoginStore} from '@/stores/user'
 import { ElButton, ElDialog, ElForm, ElFormItem, ElInput, ElMessage } from 'element-plus'
 import { onMounted, ref, nextTick } from 'vue'
-// import { getwebinfo } from '../../apis/user'
+import { getwebinfo } from '../../apis/user'
 import topnav from './components/topnav/index.vue'
 import Sortable from 'sortablejs';
 let index = -1
@@ -81,6 +82,12 @@ const pretimmer = ref<number | undefined>(undefined)
 const confirm = () => {
   loginStore.deleteUser(index)
   dialogVisible.value = false
+}
+interface tempform {
+  name: string;
+  dec: string;
+  src: string;
+  url: string;
 }
 const handkeydown = (event: KeyboardEvent) => {
   if((mode.value == 1 || mode.value == 3) && event.key === 'Escape' && !pretimmer.value) {
@@ -157,22 +164,20 @@ const hidetabbar = () => {
 const submitForm = async () => {
   if(mode.value==2){
     mode.value = 0
-    // if(tempform.value.url == " "){
-    //   ElMessage.error('请填写网址')
-    // }
-    // else
-    // {
-    //   let tempform = await getwebinfo(tempForm.value.url)
-    //   if(tempForm.value.name == " "){
-    //     tempForm.value.name = tempform.name
-    //   }
-    //   if(tempForm.value.src == " "){
-    //     tempForm.value.src = tempform.src
-    //   }
-    //   if(tempForm.value.dec == " "){
-    //     tempForm.value.dec = tempform.dec
-    //   }
-    // }
+    if(tempForm.value.url == ""){
+      ElMessage.error('请填写网址')
+    }
+    else
+    {
+      const tempform = await getwebinfo(tempForm.value.url)
+      console.log(tempform.data.data)
+      if(tempForm.value.name == ""){
+        tempForm.value.name = tempform.data.data.title
+      }
+      if(tempForm.value.src == ""){
+        tempForm.value.src = tempform.data.data.icon
+      }
+    }
     loginStore.adduserinfo(tempForm.value.name, tempForm.value.dec, tempForm.value.url, tempForm.value.src)
   }
   if(mode.value==3){
@@ -299,6 +304,7 @@ onMounted(() => {
   box-sizing: border-box;
   padding-left: 40px; // 距离视口左右20p
   padding-right: 40px; // 距离视口左右20px
+  padding-top: 40px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); // 调整最小列宽
   gap: 20px; // 统一控制间距
@@ -307,9 +313,8 @@ onMounted(() => {
   margin-right: auto;
   margin-top: 100px;
   // border: 1px solid red;
-  backdrop-filter: blur(6px);
   background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  // filter: blur(10px);
 }
-
-
 </style>

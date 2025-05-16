@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {getMusicListApi,getMusicApi} from '../apis/music';
-const audioSrc = ref('http://m701.music.126.net/20250512232809/a607947a63a21ea70416ee68786e85c5/jdyyaac/obj/w5rDlsOJwrLDjj7CmsOj/21437209997/c67b/affc/9c70/f128f990576f52957c574c2f9f0db2f5.m4a?vuutv=aSJyNjIY7+2utrgh8x6enxpvTm7PyFPuVZX1S4qvD4wPVnedZQWA/gixjfliYtSy7mJxSMsumt9R25mJMyOuGkqLaPhxLUQ90I83yitFco0=')
+const audioSrc = ref("http://m801.music.126.net/20250516230047/858574b7ee1b3d61a889e8605f56d5bc/jdyyaac/obj/w5rDlsOJwrLDjj7CmsOj/21437209997/c67b/affc/9c70/f128f990576f52957c574c2f9f0db2f5.m4a?vuutv=+V7PSfB8ZO5QZqoorRG4xz/Ut/aa9m2aDdzr7kMMgweDrCfOfdbSIs2JiFNEhGcF3eBv0xbnH0H+iw8kUZ8O1jncEBDr1MV/DmFg2zUv1+Q=")
 const inputText = ref('')
 interface MusicItem {
   id: number;
@@ -47,9 +47,9 @@ interface MusicItem {
 }
 const realAudioInfo = ref({
   id: 0,
-  song: '',
-  singer: '',
-  cover: ''
+  song: 'UNDERTAIL',
+  singer: 'Toby Fox',
+  cover: 'https://p3.music.126.net/mQcab-6L7D-w1lRxmYB7MQ==/109951168015051713.jpg'
 })
 const audioRef = ref<HTMLAudioElement | null>(null)
 const musicList = ref<MusicItem[]>([])

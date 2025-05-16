@@ -45,7 +45,7 @@ const props = defineProps({
 const decshow = ref(false)
 const imageSrc = computed(() => props.src);
 const altText = computed(() => props.text);
-const description = computed(() => props.dec);
+const description = computed(() => {if(props.dec === "") return props.text; return props.dec});
 const x = ref(0)
 const y = ref(0)
 const updata = (e: MouseEvent) => {
@@ -141,11 +141,13 @@ const mymouseout = () => {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  border: 1px solid #000;
+  // border: 1px solid #000;
   margin-top: 10px;
 }
 .icon{
   user-select: none;
+  width: 50px;
+  height: 50px;
 }
 .text{
   margin-top: 20px;
@@ -170,6 +172,8 @@ const mymouseout = () => {
   max-width: 150px;
   user-select: none;
   z-index: 1000;
+  backdrop-filter: blur(5px);
+  color: black;
 }
 @keyframes edit {
   0% {

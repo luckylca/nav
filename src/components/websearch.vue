@@ -115,7 +115,7 @@ const reset = () => {
   margin-left: 13px;
   position: absolute;
   left: 0;
-  top: 11px;
+  top: 13px;
 }
 .chose1{
   width: 10px;
@@ -168,6 +168,7 @@ const reset = () => {
   background-color: #f0f0f0;
   outline: none;
   border: none;
+  font-size: 15px;
 }
 
 

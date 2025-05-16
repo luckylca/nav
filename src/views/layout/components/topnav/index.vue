@@ -1,13 +1,16 @@
 <template>
 <div class="continer">
   <img src="../../../../assets/music/音乐.png" alt="" class="music" @mouseenter="showMusicCard"/>
-  <img src="https://github.com/favicon.ico" alt="" class="github" >
+  <img src="https://github.com/favicon.ico" alt="" class="github" @click="openGithub">
   <div class="headline animate__animated"
     onmouseover="this.classList.add('animate__flip')"
     onmouseout="this.classList.remove('animate__flip')"
   >{{loginStore.userdata.account}}的导航栏</div>
-  <div class="user">
+  <div class="user" v-if="loginStore.userdata.account">
     {{loginStore.userdata.account}}
+  </div>
+  <div class="user" v-else @click = "openLogin">
+    未登录
   </div>
   <div @click="logout">退出登录</div>
 </div>
@@ -19,8 +22,12 @@
 import {useLoginStore} from '@/stores/user'
 import musicCard from '@/components/musicCard.vue'
 import { onMounted,ref } from 'vue'
+import {saveUserInfo} from '@/apis/user'
 const loginStore = useLoginStore()
 const hideTimeout = ref<number | undefined>(undefined)
+const openGithub = () => {
+  window.open('https://github.com')
+}
 const showMusicCard = () => {
   clearTimeout(hideTimeout.value);
   const musicClass = document.getElementById('musicClass');
@@ -40,9 +47,13 @@ const hideMusicCard = () => {
   }, 5000)
 }
 const logout = () => {
+  saveUserInfo(loginStore.userdata.account, loginStore.userdata.token, loginStore.userinfo);
+  loginStore.logout();
   window.location.href = '/login'
 }
-
+const openLogin = () => {
+  window.location.href = '/login'
+}
 onMounted(() => {
   const musicClass = document.getElementById('musicClass')
   const inputElement = musicClass.querySelector('input, textarea, [contenteditable]');
@@ -61,7 +72,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .continer{
   width: 100%;
-  border: 1px solid red;
+  // border: 1px solid red;
   height: 50px;
   position: fixed;
   box-sizing: border-box;
@@ -70,7 +81,8 @@ onMounted(() => {
   justify-content: center;
   padding: 0 0px;
   margin-top: 0px;
-  background-color: gray;
+  background: linear-gradient(135deg, rgba(230, 235, 240, 0.2), rgba(220, 225, 235, 0.9));
+  backdrop-filter: blur(5px);
   position: relative;
 }
 .github{

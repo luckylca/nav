@@ -36,6 +36,7 @@ import { ref } from 'vue';
 import { useLoginStore } from '@/stores/user';
 import {getLogin} from '@/apis/user';
 import { getreg } from '@/apis/user';
+import { getUserInfo } from '@/apis/user';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
@@ -62,17 +63,31 @@ const rules = {
   ],
 }
 const loginclick = ()=>{
-  loginStore.login(formdata.value.username, formdata.value.password)
   form.value.validate(async (valid) => {
     if (valid) {
       const res = await getLogin(formdata.value.username, formdata.value.password)
       console.log(res)
-      ElMessage({
-        type: 'success',
-        message: '登录成功',
-        duration: 2000
-      })
-      router.replace({path: '/'})
+      if (res.data.code == 200) {
+        loginStore.login(formdata.value.username, formdata.value.password ,res.data.token)
+        const token = res.data.token
+        const account = formdata.value.username
+        const res2 = await getUserInfo(account,token)
+        console.log(res2.data)
+        loginStore.userinfo = res2.data.data
+        ElMessage({
+          type: 'success',
+          message: '登录成功',
+          duration: 2000
+        })
+        router.replace({path: '/'})
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '登录失败，请检查用户名和密码',
+          duration: 2000
+        })
+      }
+
     } else {
 
       ElMessage({
@@ -84,18 +99,26 @@ const loginclick = ()=>{
   })
 }
 const registerclick = ()=>{
-  loginStore.register(formdata.value.username, formdata.value.password)
   form.value.validate(async (valid) => {
     if (valid) {
-      loginStore.register(formdata.value.username, formdata.value.password)
       const res = await getreg(formdata.value.username, formdata.value.password)
       console.log(res)
-      ElMessage({
-        type: 'success',
-        message: '注册成功',
-        duration: 2000
-      })
-      router.replace({path: '/'})
+      if (res.data.code == 200) {
+        loginStore.register(formdata.value.username, formdata.value.password,res.data.token)
+        ElMessage({
+          type: 'success',
+          message: '注册成功',
+          duration: 2000
+        })
+        router.replace({path: '/'})
+      } else {
+        ElMessage({
+          type: 'error',
+          message: '你的用户名重复了',
+          duration: 2000
+        })
+      }
+
     } else {
       ElMessage({
         type: 'error',

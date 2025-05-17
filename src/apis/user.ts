@@ -31,7 +31,7 @@ export const getUserInfo = async (account: string, token: string) => {
 
   });
 }
-export const saveUserInfo = async (account: string, token: string, userinfo: object) => {
+export const saveUserInfo = async (account: string, token: string, userinfo: object[]) => {
   return instance.post('/userinfo', {
     params: {
       account: account,

@@ -46,8 +46,8 @@ const hideMusicCard = () => {
     }
   }, 5000)
 }
-const logout = () => {
-  saveUserInfo(loginStore.userdata.account, loginStore.userdata.token, loginStore.userinfo);
+const logout = async () => {
+  await saveUserInfo(loginStore.userdata.account, loginStore.userdata.token, loginStore.userinfo);
   loginStore.logout();
   window.location.href = '/login'
 }

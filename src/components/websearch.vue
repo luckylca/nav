@@ -107,6 +107,7 @@ const reset = () => {
   border-radius: 20px;
   background-color: #f0f0f0;
   position: relative;
+  opacity: 0.9;
 }
 .Search_engine{
   max-width: 25px;

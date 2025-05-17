@@ -10,8 +10,8 @@
 
     <websearch/>
     <div class="container_item" ref="containerRef" >
-      <div v-for="item in userInfo" :key="item.id" class="webicon">
-        <webicon :src="item.src" :text="item.name" :dec="item.dec" :id="item.id" :mode="mode" @click="handleClick(item.id)"/>
+      <div v-for="(item, i) in userInfo" :key="item.id" class="webicon">
+        <webicon :src="item.src" :text="item.name" :dec="item.dec" :id="item.id" :mode="mode" @click="handleClick(i)"/>
       </div>
     </div>
 
@@ -19,16 +19,16 @@
   <ElDialog v-model="formDialog" title="表单示例" width="40%">
     <ElForm :model="tempForm" label-width="80px">
       <ElFormItem label="链接">
-        <ElInput v-model="tempForm.url" />
+        <ElInput v-model="tempForm.url" placeholder = "请输入链接(必选)"/>
       </ElFormItem>
       <ElFormItem label="名称">
-        <ElInput v-model="tempForm.name" />
+        <ElInput v-model="tempForm.name" placeholder="请输入名称(可选)"/>
       </ElFormItem>
       <ElFormItem label="描述">
-        <ElInput v-model="tempForm.dec" />
+        <ElInput v-model="tempForm.dec" placeholder="请输入描述(可选)"/>
       </ElFormItem>
       <ElFormItem label="图标">
-        <ElInput v-model="tempForm.src" />
+        <ElInput v-model="tempForm.src" placeholder="请输入图标链接(可选)"/>
       </ElFormItem>
     </ElForm>
     <template #footer>

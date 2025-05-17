@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { getUserInfo } from '@/apis/user';
 
 export const useLoginStore = defineStore('user', () => {
   const userdata = ref({
@@ -293,11 +294,19 @@ export const useLoginStore = defineStore('user', () => {
     userdata.value.account = account
     userdata.value.password = password
     userdata.value.token = token
+    const res = await getUserInfo(account, token)
+    if (res.data.code === 200) {
+      userinfo.value = res.data.data
+    }
   }
   async function register(account:string, password:string,token:string) {
     userdata.value.account = account
     userdata.value.password = password
     userdata.value.token = token
+    const res = await getUserInfo(account, token)
+    if (res.data.code === 200) {
+      userinfo.value = res.data.data
+    }
   }
 function userinfoupdata(index: number, name: string, dec: string, url: string, src: string) {
   const updatedUser = {
@@ -339,6 +348,7 @@ function logout() {
     password: '',
     token: ''
   }
+  userinfo.value = []
 }
 return { login, register, userinfo, userinfoupdata, adduserinfo, deleteUser, userdata, changeWebOrder, logout }
 

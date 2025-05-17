@@ -36,7 +36,6 @@ import { ref } from 'vue';
 import { useLoginStore } from '@/stores/user';
 import {getLogin} from '@/apis/user';
 import { getreg } from '@/apis/user';
-import { getUserInfo } from '@/apis/user';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
@@ -62,34 +61,36 @@ const rules = {
     { required: true, message: '请勾选协议', trigger: 'change' },
   ],
 }
-const loginclick = ()=>{
+const loginclick = async () => {
   form.value.validate(async (valid) => {
     if (valid) {
       const res = await getLogin(formdata.value.username, formdata.value.password)
       console.log(res)
       if (res.data.code == 200) {
-        loginStore.login(formdata.value.username, formdata.value.password ,res.data.token)
-        const token = res.data.token
-        const account = formdata.value.username
-        const res2 = await getUserInfo(account,token)
-        console.log(res2.data)
-        loginStore.userinfo = res2.data.data
+        await loginStore.login(formdata.value.username, formdata.value.password ,res.data.token)
         ElMessage({
           type: 'success',
           message: '登录成功',
           duration: 2000
         })
         router.replace({path: '/'})
-      } else {
+      }
+      else if(res.data.code == 404){
         ElMessage({
           type: 'error',
-          message: '登录失败，请检查用户名和密码',
+          message: '登录失败，用户不存在，请先注册',
           duration: 2000
         })
       }
-
-    } else {
-
+      else if(res.data.code == 401){
+        ElMessage({
+          type: 'error',
+          message: '登录失败，密码错误',
+          duration: 2000
+        })
+      }
+    }
+    else {
       ElMessage({
         type: 'error',
         message: '登录失败，请检查用户名和密码',
@@ -118,7 +119,6 @@ const registerclick = ()=>{
           duration: 2000
         })
       }
-
     } else {
       ElMessage({
         type: 'error',

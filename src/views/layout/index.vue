@@ -22,13 +22,13 @@
         <ElInput v-model="tempForm.url" placeholder = "请输入链接(必选)"/>
       </ElFormItem>
       <ElFormItem label="名称">
-        <ElInput v-model="tempForm.name" placeholder="请输入名称(可选)"/>
+        <ElInput v-model="tempForm.name" placeholder="(可选)"/>
       </ElFormItem>
       <ElFormItem label="描述">
-        <ElInput v-model="tempForm.dec" placeholder="请输入描述(可选)"/>
+        <ElInput v-model="tempForm.dec" placeholder="(可选)"/>
       </ElFormItem>
       <ElFormItem label="图标">
-        <ElInput v-model="tempForm.src" placeholder="请输入图标链接(可选)"/>
+        <ElInput v-model="tempForm.src" placeholder="(可选)"/>
       </ElFormItem>
     </ElForm>
     <template #footer>
@@ -258,6 +258,7 @@ onMounted(() => {
   border-radius: 50%;
   transition: transform 0.5s ease;
   z-index: 1000;
+  filter: invert(100%);
 }
 .tabbarButton:hover{
   transform: rotate(180deg);
@@ -313,7 +314,7 @@ onMounted(() => {
   margin-right: auto;
   margin-top: 100px;
   // border: 1px solid red;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   // filter: blur(10px);
 }

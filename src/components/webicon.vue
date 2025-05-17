@@ -122,14 +122,18 @@ const mymouseout = () => {
   animation: edit 0.3s infinite;
 }
 .continer2::after{
-  content: '✍';
+  content: '';
+  width: 30px;
+  height: 30px;
   position: relative;
-  top: -95px; /* Adjust position if needed */
+  top: -90px; /* Adjust position if needed */
   right: -30px; /* Adjust position if needed */
-  color: red; /* Set color for the content */
-  line-height: 1; /* Adjust line height if needed */
-  font-size: 20px; /* Increase font size for better visibility */
   display: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  // border: 1px solid red;
+  background-image: url("data:image/svg+xml,%3Csvg t='1747474825064' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='4613' width='200' height='200'%3E%3Cpath d='M882.553 207.403l-66.652-66.652L894.352 62.3s67.244-1.399 67.244 65.845l-79.043 79.258z m-727.882 34.214v627.609H782.28V443.348l89.658-89.658v515.536c0 49.518-40.14 89.658-89.658 89.658H154.671c-49.518 0-89.658-40.14-89.658-89.658V241.617c0-49.518 40.14-89.658 89.658-89.658h515.536l-89.658 89.658H154.671zM378.817 645.08v-67.244l33.622-33.622 67.199 67.199-33.578 33.667h-67.243z m458.965-392.789L502.021 588.967 434.853 521.8l336.219-336.219 66.71 66.71z' fill='%230F0F0F' p-id='4614'%3E%3C/path%3E%3C/svg%3E");
 }
 .continer2:hover::after{
   display: block;
@@ -173,7 +177,7 @@ const mymouseout = () => {
   user-select: none;
   z-index: 1000;
   backdrop-filter: blur(5px);
-  color: black;
+  color: white;
 }
 @keyframes edit {
   0% {

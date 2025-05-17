@@ -26,7 +26,7 @@ import {saveUserInfo} from '@/apis/user'
 const loginStore = useLoginStore()
 const hideTimeout = ref<number | undefined>(undefined)
 const openGithub = () => {
-  window.open('https://github.com')
+  window.open('https://github.com/luckylca/nav')
 }
 const showMusicCard = () => {
   clearTimeout(hideTimeout.value);

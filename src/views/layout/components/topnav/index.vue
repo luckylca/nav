@@ -23,6 +23,7 @@ import {useLoginStore} from '@/stores/user'
 import musicCard from '@/components/musicCard.vue'
 import { onMounted,ref } from 'vue'
 import {saveUserInfo} from '@/apis/user'
+import router from '@/router'
 const loginStore = useLoginStore()
 const hideTimeout = ref<number | undefined>(undefined)
 const openGithub = () => {
@@ -49,14 +50,17 @@ const hideMusicCard = () => {
 const logout = async () => {
   await saveUserInfo(loginStore.userdata.account, loginStore.userdata.token, loginStore.userinfo);
   loginStore.logout();
-  window.location.href = '/login'
+  router.push('/login')
 }
 const openLogin = () => {
-  window.location.href = '/login'
+  // window.location.href = '/login'
+  router.push('/login')
 }
 onMounted(() => {
   const musicClass = document.getElementById('musicClass')
+  if (!musicClass) return;
   const inputElement = musicClass.querySelector('input, textarea, [contenteditable]');
+
   musicClass.addEventListener('mouseenter', showMusicCard);
   musicClass.addEventListener('mouseleave', hideMusicCard);
   if (inputElement) {

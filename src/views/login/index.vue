@@ -38,8 +38,8 @@ import {getLogin} from '@/apis/user';
 import { getreg } from '@/apis/user';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
-
 const loginStore = useLoginStore();
 const router = useRouter();
 const formdata = ref({
@@ -47,7 +47,7 @@ const formdata = ref({
   password: '',
   agreement: false,
 })
-const form = ref(null)
+const form = ref<FormInstance | null>(null)
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -62,6 +62,7 @@ const rules = {
   ],
 }
 const loginclick = async () => {
+  if (!form.value) return;
   form.value.validate(async (valid) => {
     if (valid) {
       const res = await getLogin(formdata.value.username, formdata.value.password)
@@ -100,6 +101,7 @@ const loginclick = async () => {
   })
 }
 const registerclick = ()=>{
+  if (!form.value) return;
   form.value.validate(async (valid) => {
     if (valid) {
       const res = await getreg(formdata.value.username, formdata.value.password)

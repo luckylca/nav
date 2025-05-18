@@ -19,7 +19,7 @@
   <ElDialog v-model="formDialog" title="表单示例" width="40%">
     <ElForm :model="tempForm" label-width="80px">
       <ElFormItem label="链接">
-        <ElInput v-model="tempForm.url" placeholder = "请输入链接(必选)"/>
+        <ElInput v-model="tempForm.url" placeholder = "(必选)"/>
       </ElFormItem>
       <ElFormItem label="名称">
         <ElInput v-model="tempForm.name" placeholder="(可选)"/>
@@ -32,7 +32,7 @@
       </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton @click="formDialog = false">取消</ElButton>
+      <ElButton @click="formDialog = false;mode = 0">取消</ElButton>
       <ElButton type="primary" @click="submitForm">提交</ElButton>
     </template>
   </ElDialog>
@@ -82,12 +82,6 @@ const pretimmer = ref<number | undefined>(undefined)
 const confirm = () => {
   loginStore.deleteUser(index)
   dialogVisible.value = false
-}
-interface tempform {
-  name: string;
-  dec: string;
-  src: string;
-  url: string;
 }
 const handkeydown = (event: KeyboardEvent) => {
   if((mode.value == 1 || mode.value == 3) && event.key === 'Escape' && !pretimmer.value) {
@@ -150,17 +144,7 @@ const handleEditClick = () => {
   mode.value = 3
   ElMessage('长按ESC键退出编辑模式.')
 }
-const showtabbar = () => {
-  temp1 = 1
-  tabbar.style.opacity = '1';
-}
-const hidetabbar = () => {
-  if (temp1 === 1) {
-    temp1 = 0
-    tabbar.style.opacity = '0';
-    return
-  }
-}
+
 const submitForm = async () => {
   if(mode.value==2){
     mode.value = 0
@@ -210,15 +194,38 @@ function initSortable() {
 onMounted(() => {
   const target = document.getElementById('tabbarButton');
   const tabbar = document.getElementById('tabbar');
-  tabbar.addEventListener('mouseenter', showtabbar);
-  tabbar.addEventListener('mouseleave', hidetabbar);
-  target.addEventListener('mouseenter', showtabbar);
-  target.addEventListener('mouseleave', hidetabbar);
+  const showtabbar = () => {
+    temp1 = 1
+    if(tabbar)
+    {
+      tabbar.style.opacity = '1';
+    }
+  }
+  const hidetabbar = () => {
+    if (temp1 === 1) {
+      temp1 = 0
+    if(tabbar)
+    {
+      tabbar.style.opacity = '0';
+    }
+      return
+    }
+  }
+  if (tabbar) {
+    tabbar.addEventListener('mouseenter', showtabbar);
+    tabbar.addEventListener('mouseleave', hidetabbar);
+  }
+  if (target) {
+    target.addEventListener('mouseenter', showtabbar);
+    target.addEventListener('mouseleave', hidetabbar);
+  }
   window.addEventListener('keydown', handkeydown);
   window.addEventListener('keyup', handkeyup);
   initSortable();
+
 });
 </script>
+
 
 
 <style lang="scss" scoped>

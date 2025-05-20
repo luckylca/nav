@@ -217,8 +217,8 @@ function musicStart(id: number, index: number) {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 200px;
+  height: 100px;
   background-image: var(--imgurl);
   background-size: cover;
   background-position: center;

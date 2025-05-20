@@ -69,16 +69,17 @@ const handleWheel = (event: { deltaY: number; }) => {
   if(showArrows.value == true)
 {
   if (event.deltaY < 0) {
-    index.value--;
-    if (index.value < 0) {
-      index.value = SearchEngineList.value.length;
+
+    if (index.value <= 0) {
+      index.value = SearchEngineList.value.length - 1;
     }
+    index.value--;
 
   } else if (event.deltaY > 0) {
-    index.value++;
-    if (index.value >= SearchEngineList.value.length) {
+    if (index.value >= SearchEngineList.value.length - 1) {
       index.value = 0;
     }
+    index.value++;
 
   }
 }

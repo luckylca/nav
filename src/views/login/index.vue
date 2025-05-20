@@ -1,6 +1,8 @@
 <template>
 <div class="layout">
     <div class="login-container">
+      <div v-if="isLogin" class="mention">登录</div>
+      <div v-else class="mention">注册</div>
       <div class="form-container">
         <el-form
         ref="form"
@@ -18,14 +20,16 @@
         </el-form-item>
         <br/>
         <el-form-item label="协议" prop="agreement">
-          <el-checkbox v-model="formdata.agreement" class="agreementtext">我同意隐私协议</el-checkbox>
+          <el-checkbox v-model="formdata.agreement" class="agreementtext">我同意隐私条款和服务协议</el-checkbox>
         </el-form-item>
         </el-form>
     </div>
     <div class="but-container">
-      <div class="login-button" @click="loginclick">登录</div>
-      <div class="login-button" @click="registerclick">注册</div>
+      <div class="login-button" v-show="isLogin" @click="loginclick">登录</div>
+      <div class="login-button" v-show="!isLogin" @click="registerclick">注册</div>
     </div>
+    <div @click="changeMode" v-show="isLogin" style="font-size: 13px;margin-top: 10px;">如果未注册，请点击这里注册</div>
+    <div @click="changeMode" v-show="!isLogin" style="font-size: 13px;margin-top: 10px;">如果已注册，请点击这里登录</div>
   </div>
 </div>
 
@@ -38,7 +42,7 @@ import {getLogin} from '@/apis/user';
 import { getreg } from '@/apis/user';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus'
-import type { FormInstance } from 'element-plus'
+import type { FormInstance, FormItemRule } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 const loginStore = useLoginStore();
 const router = useRouter();
@@ -48,6 +52,7 @@ const formdata = ref({
   agreement: false,
 })
 const form = ref<FormInstance | null>(null)
+const isLogin = ref(true)
 const rules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -57,9 +62,19 @@ const rules = {
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' },
   ],
-  agreement: [
-    { required: true, message: '请勾选协议', trigger: 'change' },
-  ],
+  // agreement: [
+  //   { required: true, message: '请勾选协议', trigger: 'change' },
+  // ],
+  agreement:[
+    {
+      validator: (rule: FormItemRule, value: boolean, callback: (error?: Error) => void) => {
+        if (!value) {
+          return callback(new Error('请同意隐私条款和服务协议'))
+        }
+        callback()
+      }
+    }
+  ]
 }
 const loginclick = async () => {
   if (!form.value) return;
@@ -99,6 +114,12 @@ const loginclick = async () => {
       })
     }
   })
+}
+const changeMode = () => {
+  isLogin.value = !isLogin.value
+  formdata.value.username = ''
+  formdata.value.password = ''
+  formdata.value.agreement = false
 }
 const registerclick = ()=>{
   if (!form.value) return;
@@ -197,13 +218,12 @@ html, body {
 }
 .but-container{
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   padding: 0 80px;
-  margin-top: 20px;
 }
 .login-button{
-  width: 90px;
+  width: 200px;
   height: 45px;
   line-height: 30px;
   text-align: center;
@@ -214,5 +234,10 @@ html, body {
   justify-content: center;
   align-items: center;
 }
-
+.mention{
+  font-size: 25px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
 </style>

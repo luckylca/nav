@@ -6,8 +6,9 @@
     onmouseover="this.classList.add('animate__flip')"
     onmouseout="this.classList.remove('animate__flip')"
   >{{loginStore.userdata.account}}的导航栏</div>
-  <div class="user" v-if="loginStore.userdata.account">
+  <div class="user" v-if="loginStore.userdata.account" @click = "sync" @mouseenter="showSync" @mouseleave="hideSync">
     {{loginStore.userdata.account}}
+    <div class="userDec" id="userDec" style="position: absolute;top: -15px;left: 25px;width: 100%;height: 100%;font-size: 15px;">🔁</div>
   </div>
   <div class="user" v-else @click = "openLogin">
     未登录
@@ -24,6 +25,7 @@ import musicCard from '@/components/musicCard.vue'
 import { onMounted,ref } from 'vue'
 import {saveUserInfo} from '@/apis/user'
 import router from '@/router'
+import { ElMessage } from 'element-plus'
 const loginStore = useLoginStore()
 const hideTimeout = ref<number | undefined>(undefined)
 const openGithub = () => {
@@ -51,6 +53,28 @@ const logout = async () => {
   await saveUserInfo(loginStore.userdata.account, loginStore.userdata.token, loginStore.userinfo);
   loginStore.logout();
   router.push('/login')
+}
+const sync = async () => {
+  await saveUserInfo(loginStore.userdata.account, loginStore.userdata.token, loginStore.userinfo);
+  ElMessage({
+    message: '同步成功',
+    type: 'success',
+    duration: 1000
+  })
+}
+const showSync = () => {
+  const userDec = document.getElementById('userDec')
+  if(userDec){
+    userDec.style.opacity = '1'
+    userDec.style.transition = 'opacity 0.5s'
+  }
+}
+const hideSync = () => {
+  const userDec = document.getElementById('userDec')
+  if(userDec){
+    userDec.style.opacity = '0'
+    userDec.style.transition = 'opacity 0.5s'
+  }
 }
 const openLogin = () => {
   // window.location.href = '/login'
@@ -99,6 +123,7 @@ onMounted(() => {
 
 .user{
   padding: 0 5px;
+  position: relative;
 }
 .headline{
   margin-left: auto;

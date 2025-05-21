@@ -44,6 +44,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormItemRule } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
+import { ElLoading } from 'element-plus'
 const loginStore = useLoginStore();
 const router = useRouter();
 const formdata = ref({
@@ -80,10 +81,17 @@ const loginclick = async () => {
   if (!form.value) return;
   form.value.validate(async (valid) => {
     if (valid) {
+      const loadingInstance = ElLoading.service({
+        lock: true,
+        text: '加载中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const res = await getLogin(formdata.value.username, formdata.value.password)
-      console.log(res)
+
       if (res.data.code == 200) {
         await loginStore.login(formdata.value.username, formdata.value.password ,res.data.token)
+        loadingInstance.close()
         ElMessage({
           type: 'success',
           message: '登录成功',
@@ -92,6 +100,7 @@ const loginclick = async () => {
         router.replace({path: '/'})
       }
       else if(res.data.code == 404){
+        loadingInstance.close()
         ElMessage({
           type: 'error',
           message: '登录失败，用户不存在，请先注册',
@@ -99,6 +108,7 @@ const loginclick = async () => {
         })
       }
       else if(res.data.code == 401){
+        loadingInstance.close()
         ElMessage({
           type: 'error',
           message: '登录失败，密码错误',

@@ -101,7 +101,6 @@ const handkeyup = (event: KeyboardEvent) => {
   }
 }
 const handleClick = (i: number) => {
-  console.log(mode.value)
   if(mode.value==0){
     const url = userInfo.value[i].url;
     setTimeout(() => {

@@ -247,7 +247,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://bing.img.run/rand_uhd.php');
+  background-image: url('https://api.xsot.cn/bing?jump=true');
   background-size: cover;
   opacity: 0.9;
   background-position: center;
